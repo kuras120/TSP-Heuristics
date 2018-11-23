@@ -1,7 +1,7 @@
 from tools.NeighboursGenerator import *
 from tools.SolutionGenerator import *
-from FileLoader import FileLoader
-from msvcrt import getch, kbhit
+from tools.FileLoader import FileLoader
+from tools.KBHit import *
 from enum import Enum
 import sys
 import random
@@ -24,6 +24,8 @@ class TabuSearch:
     def __init__(self, file, type_t):
         self.__loader = FileLoader()
         self.__loader.load(file, type_t)
+
+        self.__keyboard = KBHit()
 
         self.__file = file
         self.__type_t = type_t
@@ -209,13 +211,13 @@ class TabuSearch:
         raise Exception("Diversification method named " + diversification.name + " doesn't exist.")
 
     def __app_manager(self):
-        if kbhit():
-            key = ord(getch())
+        if self.__keyboard.kbhit():
+            key = ord(self.__keyboard.getch())
             if key == 32:
                 print("Program paused")
                 self.print_solution()
                 while True:
-                    key = ord(getch())
+                    key = ord(self.__keyboard.getch())
                     if key == 32:
                         print("Program resumed")
                         break
