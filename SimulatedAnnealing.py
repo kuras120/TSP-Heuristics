@@ -1,10 +1,11 @@
-from tools.FileLoader import FileLoader
+from tools.FileLoader import *
 from tools.KBHit import *
 from tools.NeighboursGenerator import *
 from tools.SolutionGenerator import *
 import sys
 import random
 import math
+import time
 
 
 class SimulatedAnnealing:
@@ -39,7 +40,7 @@ class SimulatedAnnealing:
         route = self.__solution.generate()
         self.__best_route, self.__best_cost, self.__start_best = route[0], route[1], route
         best_neighbour = route
-        temperature = 0.8
+        temperature = 1.0
 
         print("Start best: " + route[0].__str__())
         print("with cost: " + route[1].__str__())
@@ -52,14 +53,24 @@ class SimulatedAnnealing:
                 print("SOMSIAD: " + best_neighbour.__str__())
                 self.check_for_best(best_neighbour)
                 self.__cost_difference = best_neighbour[1] - self.__previous_cost
-                if self.__cost_difference < 0:
+                if self.__cost_difference <= 0:
                     route = best_neighbour
                 else:
                     x = random.uniform(0, 1)
-                    if x < math.exp(-self.__cost_difference / temperature):
+                    # print("--------------------------------")
+                    # print(math.exp(-self.__cost_difference / temperature))
+                    # print("dla temperatury")
+                    # print(temperature)
+                    # print("dla roznicy kosztow")
+                    # print(self.__cost_difference)
+                    if x < math.exp(-self.__cost_difference / (temperature*500)):
+                        # print("WESZLO")
                         route = best_neighbour
 
-            temperature = (0.5 * math.sin(i*0.01 + (4 * math.pi) / 5)) + 0.5
+                    # print("--------------------------------")
+                    # time.sleep(0.1)
+
+            temperature = (0.485 * math.sin(i*0.1 + (math.pi/2))) + 0.515
         print("\n\n")
         self.print_solution()
 
@@ -111,4 +122,4 @@ class SimulatedAnnealing:
 
 if __name__ == "__main__":
     annealing = SimulatedAnnealing("test/TSP/gr48.tsp", "LOWER_DIAG")
-    annealing.calculate(Type.Random, Method.Invert, 100000)
+    annealing.calculate(Type.Greedy, Method.Invert, 100000)

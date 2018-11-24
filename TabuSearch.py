@@ -1,6 +1,6 @@
 from tools.NeighboursGenerator import *
 from tools.SolutionGenerator import *
-from tools.FileLoader import FileLoader
+from tools.FileLoader import *
 from tools.KBHit import *
 from enum import Enum
 import sys

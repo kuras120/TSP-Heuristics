@@ -34,10 +34,11 @@ class NeighboursGenerator:
         neighbours = []
 
         if self.__method == Method.SwapNearest:
+            parent_path = [index] + parent_path
             for i in range(1, parent_path.__len__()):
                 neighbour = parent_path.copy()
                 neighbour[i - 1], neighbour[i] = neighbour[i], neighbour[i - 1]
-                neighbour = [index] + neighbour + [index]
+                neighbour = neighbour + [neighbour[0]]
                 # if not self.in_tabu_list(neighbour, tabu):
                 neighbour_cost = 0
                 for j in range(1, neighbour.__len__()):
@@ -46,12 +47,12 @@ class NeighboursGenerator:
                 neighbours.append([neighbour, round(neighbour_cost, 2)])
 
         elif self.__method == Method.SwapOne:
-            swap_index = random.randrange(self.__number_of_cities - 1)
-
+            swap_index = random.randrange(self.__number_of_cities)
+            parent_path = [index] + parent_path
             for i in range(parent_path.__len__()):
                 neighbour = parent_path.copy()
                 neighbour[swap_index], neighbour[i] = neighbour[i], neighbour[swap_index]
-                neighbour = [index] + neighbour + [index]
+                neighbour = neighbour + [neighbour[0]]
                 # if not self.in_tabu_list(neighbour, tabu):
                 neighbour_cost = 0
                 for j in range(1, neighbour.__len__()):
@@ -74,14 +75,14 @@ class NeighboursGenerator:
                         neighbours.append([neighbour, round(neighbour_cost, 2)])
 
         elif self.__method == Method.InsertOne:
-            insert_index = random.randrange(self.__number_of_cities - 1)
-
+            insert_index = random.randrange(self.__number_of_cities)
+            parent_path = [index] + parent_path
             for i in range(parent_path.__len__()):
                 if i != insert_index:
                     neighbour = parent_path.copy()
                     item = neighbour.pop(insert_index)
                     neighbour.insert(i, item)
-                    neighbour = [index] + neighbour + [index]
+                    neighbour = neighbour + [neighbour[0]]
                     # if not self.in_tabu_list(neighbour, tabu):
                     neighbour_cost = 0
                     for k in range(1, neighbour.__len__()):
@@ -105,7 +106,8 @@ class NeighboursGenerator:
                         neighbours.append([neighbour, round(neighbour_cost, 2)])
 
         elif self.__method == Method.InvertOne:
-            invert_index = random.randrange(self.__number_of_cities - 1)
+            invert_index = random.randrange(self.__number_of_cities)
+            parent_path = [index] + parent_path
             for i in range(parent_path.__len__()):
                 if i != invert_index:
                     neighbour = parent_path.copy()
@@ -113,7 +115,7 @@ class NeighboursGenerator:
                         neighbour[invert_index:i + 1] = reversed(neighbour[invert_index:i + 1])
                     elif i < invert_index:
                         neighbour[i:invert_index + 1] = reversed(neighbour[i:invert_index + 1])
-                    neighbour = [index] + neighbour + [index]
+                    neighbour = neighbour + [neighbour[0]]
                     # if not self.in_tabu_list(neighbour, tabu):
                     neighbour_cost = 0
                     for k in range(1, neighbour.__len__()):
@@ -141,8 +143,7 @@ class NeighboursGenerator:
 
     def generate_one(self, path):
         neighbour = path.copy()
-        index = neighbour.pop(-1)
-        neighbour.pop(0)
+        neighbour.pop(-1)
         i, j = 0, 0
         while i == j:
             i = random.randrange(neighbour.__len__())
@@ -154,14 +155,14 @@ class NeighboursGenerator:
             else:
                 neighbour[i - 1], neighbour[i] = neighbour[i], neighbour[i - 1]
 
-            neighbour = [index] + neighbour + [index]
+            neighbour = neighbour + [neighbour[0]]
             neighbour_cost = 0
             for j in range(1, neighbour.__len__()):
                 neighbour_cost += self.__data[neighbour[j - 1]][neighbour[j]]
 
         elif self.__method == Method.Swap:
             neighbour[i], neighbour[j] = neighbour[j], neighbour[i]
-            neighbour = [index] + neighbour + [index]
+            neighbour = neighbour + [neighbour[0]]
             neighbour_cost = 0
             for k in range(1, neighbour.__len__()):
                 neighbour_cost += self.__data[neighbour[k - 1]][neighbour[k]]
@@ -169,7 +170,7 @@ class NeighboursGenerator:
         elif self.__method == Method.Insert:
             item = neighbour.pop(i)
             neighbour.insert(j, item)
-            neighbour = [index] + neighbour + [index]
+            neighbour = neighbour + [neighbour[0]]
             neighbour_cost = 0
             for k in range(1, neighbour.__len__()):
                 neighbour_cost += self.__data[neighbour[k - 1]][neighbour[k]]
@@ -179,7 +180,7 @@ class NeighboursGenerator:
                 neighbour[i:j + 1] = reversed(neighbour[i:j + 1])
             else:
                 neighbour[j:i + 1] = reversed(neighbour[j:i + 1])
-            neighbour = [index] + neighbour + [index]
+            neighbour = neighbour + [neighbour[0]]
             neighbour_cost = 0
             for k in range(1, neighbour.__len__()):
                 neighbour_cost += self.__data[neighbour[k - 1]][neighbour[k]]
