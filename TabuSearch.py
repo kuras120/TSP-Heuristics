@@ -72,7 +72,6 @@ class TabuSearch:
         self.__timer = time.time()
 
         for i in range(iterations):
-            print(i)
             self.__app_manager()
             if time.time() - self.__timer > self.__loader.get_number_of_cities() / 12:
                 route = self.reset(diversification)
@@ -88,8 +87,7 @@ class TabuSearch:
         neighbours = self.__neighbours.generate(path, self.__tabu_list)
         neighbours.sort(key=lambda x: x[1])
 
-        print(self.__size_of_search)
-        # print("LOCAL BEST: " + neighbours[0].__str__())
+        # print(self.__size_of_search)
 
         best_neighbour = 0
         for elem in neighbours:
@@ -97,7 +95,7 @@ class TabuSearch:
                 best_neighbour = elem
                 break
 
-        print("LOCAL BEST: " + best_neighbour.__str__())
+        # print("LOCAL BEST: " + best_neighbour.__str__())
 
         if best_neighbour == 0:
             best_neighbour = neighbours[random.randrange(neighbours.__len__())]

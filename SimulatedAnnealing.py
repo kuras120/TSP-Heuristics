@@ -29,42 +29,41 @@ class SimulatedAnnealing:
         #Generator sasiada
         self.neighbour = NeighboursGenerator(self.__data)
 
-        #Szacowanie
-        self.__previous_cost = self.__best_cost
-        self.__cost_difference = 0
-
-        # temperature = (4999 * math.sin(2 * math.pi * i * 0.00005 + (math.pi / 2))) + 5001
+        #Reset
+        self.__timer = 0
 
     def calculate(self, type_t, method, iterations):
         self.__solution.change_type(type_t)
         self.neighbour.change_method(method)
 
-        route = self.__solution.generate()
-        self.__best_route, self.__best_cost, self.__start_best = route[0], route[1], route
-        best_neighbour = route
+        actual_solution = self.__solution.generate()
+        self.__best_route, self.__best_cost, self.__start_best = actual_solution[0], actual_solution[1], actual_solution
 
-        temp_max = 10000
-        temp_min = 1
-        step = 1
+        print("Start best: " + actual_solution[0].__str__())
+        print("with cost: " + actual_solution[1].__str__())
 
-        print("Start best: " + route[0].__str__())
-        print("with cost: " + route[1].__str__())
+        self.__timer = time.time()
+
         for i in range(iterations):
             self.__app_manager()
-            for j in range(temp_max, temp_min, -step):
-                neighbour = self.neighbour.generate_one(route[0])
-                self.__previous_cost = best_neighbour[1]
-                best_neighbour = neighbour
-                # print("SOMSIAD: " + best_neighbour.__str__())
-                self.check_for_best(best_neighbour)
-                self.__cost_difference = best_neighbour[1] - self.__previous_cost
-                if self.__cost_difference <= 0:
-                    route = best_neighbour
+            if time.time() - self.__timer > self.__loader.get_number_of_cities() / 8:
+                self.__solution.change_type(Type.Random)
+                actual_solution = self.__solution.generate()
+            temperature = (4999 * math.sin(2 * math.pi * i * 0.001 + (math.pi / 2))) + 5001
+            for j in range(self.__loader.get_number_of_cities()):
+                neighbour = self.neighbour.generate_one(actual_solution[0])
+                previous_cost = actual_solution[1]
+                # print("NEIGHBOUR: " + neighbour.__str__())
+                cost_difference = neighbour[1] - previous_cost
+                if cost_difference <= 0:
+                    self.check_for_best(actual_solution)
+                    actual_solution = neighbour
                 else:
                     x = random.uniform(0, 1)
-                    if x < math.exp(-self.__cost_difference / j):
-                        route = best_neighbour
+                    if x < math.exp(-cost_difference / temperature):
+                        actual_solution = neighbour
 
+            # print(temperature)
         print("\n\n")
         self.print_solution()
 
@@ -72,6 +71,8 @@ class SimulatedAnnealing:
         if best_neighbour[1] < self.__best_cost:
             self.__best_cost = best_neighbour[1]
             self.__best_route = best_neighbour[0]
+
+            self.__timer = time.time()
 
             print("FOUND: " + self.__best_route.__str__())
             print("COST: " + self.__best_cost.__str__())
@@ -116,4 +117,4 @@ class SimulatedAnnealing:
 
 if __name__ == "__main__":
     annealing = SimulatedAnnealing("test/TSP/gr48.tsp", "LOWER_DIAG")
-    annealing.calculate(Type.Random, Method.Invert, 1000000)
+    annealing.calculate(Type.GreedyOne, Method.Invert, 100000)
