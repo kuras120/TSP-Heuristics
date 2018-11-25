@@ -10,6 +10,7 @@ class Method(Enum):
     Insert = 4
     InvertOne = 5
     Invert = 6
+    ThreeOpt = 7
 
 
 class NeighboursGenerator:
@@ -132,6 +133,7 @@ class NeighboursGenerator:
                             neighbour_cost += self.__data[neighbour[k - 1]][neighbour[k]]
 
                         neighbours.append([neighbour, round(neighbour_cost, 2)])
+
         else:
             raise Exception("Method named " + self.__method.name + " doesn't exist.")
 

@@ -87,7 +87,7 @@ class TabuSearch:
         neighbours = self.__neighbours.generate(path, self.__tabu_list)
         neighbours.sort(key=lambda x: x[1])
 
-        # print(self.__size_of_search)
+        print(self.__size_of_search)
 
         best_neighbour = 0
         for elem in neighbours:
@@ -95,7 +95,7 @@ class TabuSearch:
                 best_neighbour = elem
                 break
 
-        # print("LOCAL BEST: " + best_neighbour.__str__())
+        print("LOCAL BEST: " + best_neighbour.__str__())
 
         if best_neighbour == 0:
             best_neighbour = neighbours[random.randrange(neighbours.__len__())]
@@ -259,9 +259,9 @@ class TabuSearch:
 
 
 if __name__ == "__main__":
-    tabu = TabuSearch("test/TSP/gr96.tsp", "COORDS_GEO")
+    tabu = TabuSearch("test/TSP/pr124.tsp", "COORDS_EUC")
     #TYPE: GREEDY/RANDOM, METHOD: SWAP NEAREST/SWAP WITH OTHERS
     #CYCLE: WITH WEAKER NEIGHBOURS/ASPIRATION ONLY
     #DIVERSIFICATION: FIXED/CONSTANT/MEMORY
     #ITERATIONS: NUMBER
-    tabu.calculate(Type.Greedy, Method.Invert, Cycle.WithWeakerNeighbours, Diversification.Fixed, 2000)
+    tabu.calculate(Type.Greedy, Method.Invert, Cycle.WithWeakerNeighbours, Diversification.Fixed, 5000)
