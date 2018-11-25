@@ -33,6 +33,8 @@ class SimulatedAnnealing:
         self.__previous_cost = self.__best_cost
         self.__cost_difference = 0
 
+        # temperature = (4999 * math.sin(2 * math.pi * i * 0.00005 + (math.pi / 2))) + 5001
+
     def calculate(self, type_t, method, iterations):
         self.__solution.change_type(type_t)
         self.neighbour.change_method(method)
@@ -40,37 +42,29 @@ class SimulatedAnnealing:
         route = self.__solution.generate()
         self.__best_route, self.__best_cost, self.__start_best = route[0], route[1], route
         best_neighbour = route
-        temperature = 1.0
+
+        temp_max = 10000
+        temp_min = 1
+        step = 1
 
         print("Start best: " + route[0].__str__())
         print("with cost: " + route[1].__str__())
         for i in range(iterations):
             self.__app_manager()
-            for j in range(2, self.__loader.get_number_of_cities()):
+            for j in range(temp_max, temp_min, -step):
                 neighbour = self.neighbour.generate_one(route[0])
                 self.__previous_cost = best_neighbour[1]
                 best_neighbour = neighbour
-                print("SOMSIAD: " + best_neighbour.__str__())
+                # print("SOMSIAD: " + best_neighbour.__str__())
                 self.check_for_best(best_neighbour)
                 self.__cost_difference = best_neighbour[1] - self.__previous_cost
                 if self.__cost_difference <= 0:
                     route = best_neighbour
                 else:
                     x = random.uniform(0, 1)
-                    # print("--------------------------------")
-                    # print(math.exp(-self.__cost_difference / temperature))
-                    # print("dla temperatury")
-                    # print(temperature)
-                    # print("dla roznicy kosztow")
-                    # print(self.__cost_difference)
-                    if x < math.exp(-self.__cost_difference / (temperature*500)):
-                        # print("WESZLO")
+                    if x < math.exp(-self.__cost_difference / j):
                         route = best_neighbour
 
-                    # print("--------------------------------")
-                    # time.sleep(0.1)
-
-            temperature = (0.485 * math.sin(i*0.1 + (math.pi/2))) + 0.515
         print("\n\n")
         self.print_solution()
 
@@ -122,4 +116,4 @@ class SimulatedAnnealing:
 
 if __name__ == "__main__":
     annealing = SimulatedAnnealing("test/TSP/gr48.tsp", "LOWER_DIAG")
-    annealing.calculate(Type.Greedy, Method.Invert, 100000)
+    annealing.calculate(Type.Random, Method.Invert, 1000000)
