@@ -259,7 +259,7 @@ class TabuSearch:
 
 
 if __name__ == "__main__":
-    tabu = TabuSearch("test/TSP/gr96.tsp", "COORDS_GEO")
+    tabu = TabuSearch("test/TSP/gr24.tsp", "LOWER_DIAG")
     #TYPE: GREEDY/RANDOM, METHOD: SWAP NEAREST/SWAP WITH OTHERS
     #CYCLE: WITH WEAKER NEIGHBOURS/ASPIRATION ONLY
     #DIVERSIFICATION: FIXED/CONSTANT/MEMORY
