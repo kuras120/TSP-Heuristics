@@ -259,9 +259,9 @@ class TabuSearch:
 
 
 if __name__ == "__main__":
-    tabu = TabuSearch("test/TSP/pr124.tsp", "COORDS_EUC")
+    tabu = TabuSearch("test/TSP/gr96.tsp", "COORDS_GEO")
     #TYPE: GREEDY/RANDOM, METHOD: SWAP NEAREST/SWAP WITH OTHERS
     #CYCLE: WITH WEAKER NEIGHBOURS/ASPIRATION ONLY
     #DIVERSIFICATION: FIXED/CONSTANT/MEMORY
     #ITERATIONS: NUMBER
-    tabu.calculate(Type.Greedy, Method.Invert, Cycle.WithWeakerNeighbours, Diversification.Fixed, 5000)
+    tabu.calculate(Type.Greedy, Method.Invert, Cycle.WithWeakerNeighbours, Diversification.Fixed, 2000)
