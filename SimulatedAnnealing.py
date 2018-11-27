@@ -231,6 +231,6 @@ if __name__ == "__main__":
     statistics = annealing.get_stats()
     everythin = sum(statistics)
 
-    print("SWAP: " + (statistics[0]).__str__())
-    print("INSERT: " + (statistics[1]).__str__())
-    print("INVERT: " + (statistics[2]).__str__())
+    print("SWAP: " + round(statistics[0] / everythin, 2).__str__())
+    print("INSERT: " + round(statistics[1] / everythin, 2).__str__())
+    print("INVERT: " + round(statistics[2] / everythin, 2).__str__())

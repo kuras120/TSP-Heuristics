@@ -210,13 +210,13 @@ class NeighboursGenerator:
 
         elif self.__method == Method.Mixed:
             statistics = None
-
             methods = [Method.Swap, Method.Insert, Method.Invert]
             neighbour = [index] + neighbour + [index]
             best_route = [[], sys.maxsize]
             for k in range(3):
                 self.change_method(methods[k])
                 temp = self.generate_one(neighbour, i, j)
+                self.change_method(Method.Mixed)
                 if temp[1] < best_route[1]:
                     statistics = k
                     best_route = temp
