@@ -22,6 +22,11 @@ class NeighboursGenerator:
         self.__data = data
         self.__number_of_cities = data.__len__()
 
+        self.__statistics = [0, 0, 0]
+
+    def get_statistics(self):
+        return self.__statistics
+
     def change_method(self, method):
         self.__method = method
 
@@ -204,6 +209,8 @@ class NeighboursGenerator:
                 neighbour_cost += self.__data[neighbour[k - 1]][neighbour[k]]
 
         elif self.__method == Method.Mixed:
+            statistics = None
+
             methods = [Method.Swap, Method.Insert, Method.Invert]
             neighbour = [index] + neighbour + [index]
             best_route = [[], sys.maxsize]
@@ -211,7 +218,10 @@ class NeighboursGenerator:
                 self.change_method(methods[k])
                 temp = self.generate_one(neighbour, i, j)
                 if temp[1] < best_route[1]:
+                    statistics = k
                     best_route = temp
+
+            self.__statistics[statistics] += 1
             neighbour = best_route[0]
             neighbour_cost = best_route[1]
 
