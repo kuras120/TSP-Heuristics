@@ -81,7 +81,6 @@ class SimulatedAnnealing:
                     if x < math.exp(-cost_difference / temperature):
                         actual_solution = neighbour
 
-            # print(temperature)
         print("\n\n")
         self.print_solution()
 
@@ -215,6 +214,13 @@ class SimulatedAnnealing:
         print("Start best: " + self.__start_best[0].__str__())
         print("with cost: " + self.__start_best[1].__str__())
 
+        statistics = annealing.get_stats()
+        everythin = sum(statistics)
+
+        print("SWAP: " + round(statistics[0] / everythin, 2).__str__())
+        print("INSERT: " + round(statistics[1] / everythin, 2).__str__())
+        print("INVERT: " + round(statistics[2] / everythin, 2).__str__())
+
     def get_solution(self):
         return self.__best_cost, self.__best_route
 
@@ -226,11 +232,6 @@ class SimulatedAnnealing:
 
 
 if __name__ == "__main__":
-    annealing = SimulatedAnnealing("test/TSP/pr124.tsp", "COORDS_EUC")
-    annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Geometric, 50000)
-    statistics = annealing.get_stats()
-    everythin = sum(statistics)
-
-    print("SWAP: " + round(statistics[0] / everythin, 2).__str__())
-    print("INSERT: " + round(statistics[1] / everythin, 2).__str__())
-    print("INVERT: " + round(statistics[2] / everythin, 2).__str__())
+    annealing = SimulatedAnnealing("test/TSP/pr226.tsp", "COORDS_EUC")
+    annealing.calculate_sa_list(Type.GreedyOne, Method.Mixed, 50000)
+    #annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Hyperbolic, 50000)
