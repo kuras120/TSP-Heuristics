@@ -1,7 +1,7 @@
 from tools.FileLoader import *
 from tools.KBHit import *
-from tools.NeighboursGenerator import *
-from tools.SolutionGenerator import *
+from tools.General.NeighboursGenerator import *
+from tools.General.SolutionGenerator import *
 import sys
 import random
 import math
