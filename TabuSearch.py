@@ -6,7 +6,6 @@ from enum import Enum
 import sys
 import random
 import time
-import math
 
 
 class Diversification(Enum):
@@ -35,61 +34,69 @@ class TabuSearch:
         self.__best_cost = sys.maxsize
         self.__start_best = [None, None]
 
-        #Generator sasiedztwa
+        # Generator sasiedztwa
         self.__neighbours = NeighboursGenerator(self.__data)
 
-        #Generator rozwiazania
+        # Generator rozwiazania
         self.__solution = SolutionGenerator(self.__file, self.__type_t, self.__data)
 
-        #Lista tabu
+        # Lista tabu
         self.__tabu_list = []
         self.__cadence = self.__loader.get_number_of_cities() * 3
 
-        #Dla wyjscia z cykli
+        # Dla wyjscia z cykli
         self.__weaker_neighbour = -1
         self.__new_best_iterator = 0
 
-        #Dywersyfikacja
+        # Dywersyfikacja
         self.__size_of_search = 6
         self.__timer = 0
 
-        #Pamiec dlugoderminowa
+        # Pamiec dlugoderminowa
         self.__memory = []
         self.__memory_length = self.__loader.get_number_of_cities()
 
     def calculate(self, type_t, method, cycle, diversification, iterations):
-        route = self.__solution.generate()
-        self.__best_route, self.__best_cost = route[0], route[1]
-        self.__start_best = route.copy()
+        print("Starting...\n")
 
         self.__neighbours.change_method(method)
         self.__solution.change_type(type_t)
+
+        route = self.__solution.generate()
+        self.__best_route, self.__best_cost = route[0], route[1]
+        self.__start_best = route.copy()
 
         cadence = self.__cadence
 
         print("Start best: " + route[0].__str__())
         print("with cost: " + route[1].__str__())
-        self.__timer = time.time()
 
+        break_time = self.__loader.get_number_of_cities() / 15
+
+        print("\nAlgorithm has been started.\n")
+        self.__timer = time.time()
         for i in range(iterations):
             self.__app_manager()
-            if time.time() - self.__timer > self.__loader.get_number_of_cities() / 12:
+
+            if (time.time() - self.__timer) > break_time:
                 route = self.reset(diversification)
             self.__tabu_list.append([route, cadence])
             route, cadence = self.check_neighbours(route[0], cycle)
             self.tabu_list_routine()
 
-        print("\n\n")
+        print("\n")
         self.print_solution()
+        print("\n")
 
     def check_neighbours(self, path, cycle):
 
         neighbours = self.__neighbours.generate(path, self.__tabu_list)
         neighbours.sort(key=lambda x: x[1])
 
-        print(self.__size_of_search)
+        # print(self.__size_of_search)
 
         best_neighbour = 0
+
         for elem in neighbours:
             if not self.__neighbours.in_tabu_list(elem, self.__tabu_list):
                 best_neighbour = elem
@@ -104,11 +111,9 @@ class TabuSearch:
         self.long_term_memory(best_neighbour)
 
         cadence = self.__cadence
-        cadence *= neighbours.__len__() / (math.pow(self.__loader.get_number_of_cities(), 2)/2)
-        cadence = round(cadence, 0)
 
-        #Po spelnieniu kryterium nastepuje przelamanie cyklu (zwiekszenie obszaru przeszukiwan)
-        #Tutaj nastepuje po okreslonej ilosci iteracji bez poprawy
+        # Po spelnieniu kryterium nastepuje przelamanie cyklu (zwiekszenie obszaru przeszukiwan)
+        # Tutaj nastepuje po okreslonej ilosci iteracji bez poprawy
         if self.__new_best_iterator > self.__loader.get_number_of_cities() * 2:
             return self.cycle_breaker(neighbours, cadence, cycle)
 
@@ -212,19 +217,19 @@ class TabuSearch:
         if self.__keyboard.kbhit():
             key = ord(self.__keyboard.getch())
             if key == 32:
-                print("Program paused")
+                print("\nProgram paused\n")
                 self.print_solution()
                 while True:
                     key = ord(self.__keyboard.getch())
                     if key == 32:
-                        print("Program resumed")
+                        print("\nProgram resumed\n")
                         break
                     elif key == 27:
-                        print("Program stopped")
+                        print("\nProgram stopped\n")
                         self.print_solution()
                         exit(0)
             elif key == 27:
-                print("Program stopped")
+                print("\nProgram stopped\n")
                 self.print_solution()
                 exit(0)
 
@@ -233,18 +238,18 @@ class TabuSearch:
         self.__best_cost = sys.maxsize
         self.__start_best = [None, None]
 
-        #Lista tabu
+        # Lista tabu
         self.__tabu_list = []
 
-        #Dla wyjscia z cykli
+        # Dla wyjscia z cykli
         self.__weaker_neighbour = -1
         self.__new_best_iterator = 0
 
-        #Dywersyfikacja
+        # Dywersyfikacja
         self.__size_of_search = 6
         self.__timer = 0
 
-        #Pamiec dlugoderminowa
+        # Pamiec dlugoderminowa
         self.__memory = []
         self.__memory_length = self.__loader.get_number_of_cities()
 
@@ -257,11 +262,17 @@ class TabuSearch:
     def get_solution(self):
         return self.__best_cost, self.__best_route
 
+    def get_data(self):
+        return self.__data
+
 
 if __name__ == "__main__":
-    tabu = TabuSearch("test/TSP/gr24.tsp", "LOWER_DIAG")
-    #TYPE: GREEDY/RANDOM, METHOD: SWAP NEAREST/SWAP WITH OTHERS
-    #CYCLE: WITH WEAKER NEIGHBOURS/ASPIRATION ONLY
-    #DIVERSIFICATION: FIXED/CONSTANT/MEMORY
-    #ITERATIONS: NUMBER
+    tabu = TabuSearch("test/TSP/gr120.tsp", "LOWER_DIAG")
+    # TYPE: GREEDY/RANDOM, METHOD: SWAP NEAREST/SWAP WITH OTHERS
+    # CYCLE: WITH WEAKER NEIGHBOURS/ASPIRATION ONLY
+    # DIVERSIFICATION: FIXED/CONSTANT/MEMORY
+    # ITERATIONS: NUMBER
+    tm = time.time()
     tabu.calculate(Type.Greedy, Method.Invert, Cycle.WithWeakerNeighbours, Diversification.Fixed, 2000)
+    tm = time.time() - tm
+    print("Processing time: " + tm.__str__())

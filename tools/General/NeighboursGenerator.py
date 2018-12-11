@@ -216,7 +216,6 @@ class NeighboursGenerator:
             for k in range(3):
                 self.change_method(methods[k])
                 temp = self.generate_one(neighbour, i, j)
-                self.change_method(Method.Mixed)
                 if temp[1] < best_route[1]:
                     statistics = k
                     best_route = temp
@@ -224,6 +223,7 @@ class NeighboursGenerator:
             self.__statistics[statistics] += 1
             neighbour = best_route[0]
             neighbour_cost = best_route[1]
+            self.change_method(Method.Mixed)
 
         elif self.__method == Method.ThreeOpt:
             i = random.randrange(neighbour.__len__() - 2)

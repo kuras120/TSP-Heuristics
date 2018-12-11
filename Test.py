@@ -1,63 +1,22 @@
 from SimulatedAnnealing import *
+from TabuSearch import *
+
+
+def neighbour_test():
+    ann = SimulatedAnnealing("test/TSP/pr226.tsp", "COORDS_EUC")
+    data = ann.get_data()
+    sol = [93, 136, 143, 145, 137, 138, 144, 146, 139, 140, 141, 142, 149, 147, 148, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172
+, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 135, 134, 133, 132, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208
+, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 225, 224, 124, 131, 129, 123, 122, 130, 128, 121, 120, 126, 127, 125, 119, 118, 109, 117, 116, 108, 107, 106, 115, 114, 113
+, 105, 103, 112, 104, 111, 110, 102, 65, 69, 68, 67, 66, 16, 15, 10, 11, 12, 70, 71, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 17, 18, 64, 19, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 33, 34, 35, 30, 31, 32, 47, 48, 46, 45, 44, 43, 36, 37, 38, 41, 39, 40, 42, 94, 86, 88, 95, 87, 96, 97, 89, 90, 98, 99, 91, 92, 100, 101, 93]
+
+    cost = 0
+    for i in range(1, sol.__len__()):
+        cost += data[sol[i-1]][sol[i]]
+
+    print(sol)
+    print(cost)
 
 
 if __name__ == "__main__":
-    annealing = SimulatedAnnealing("test/TSP/pr124.tsp", "COORDS_EUC")
-    annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Geometric, 50000)
-    statistics = annealing.get_stats()
-    everythin = sum(statistics)
-
-    print("SWAP: " + (statistics[0]).__str__())
-    print("INSERT: " + (statistics[1]).__str__())
-    print("INVERT: " + (statistics[2]).__str__())
-
-    costs1 = []
-    costs2 = []
-    costs3 = []
-    costs4 = []
-    for k in range(10):
-        annealing.calculate_sa_list(Type.GreedyOne, Method.Mixed, 250000)
-        c, r = annealing.get_solution()
-        costs1.append(c)
-        annealing.clear_values()
-    for k in range(10):
-        annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Geometric, 250000)
-        c, r = annealing.get_solution()
-        costs2.append(c)
-        annealing.clear_values()
-    for k in range(10):
-        annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Hyperbolic, 250000)
-        c, r = annealing.get_solution()
-        costs3.append(c)
-        annealing.clear_values()
-    for k in range(10):
-        annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Exponential, 250000)
-        c, r = annealing.get_solution()
-        costs4.append(c)
-        annealing.clear_values()
-
-    print("Wyniki dla mixed list")
-    srednia = 0
-    for elem in costs1:
-        srednia += elem
-        print(elem)
-    print("Srednia: " + (srednia/10).__str__())
-    print("Wyniki dla mixed geometric")
-    srednia = 0
-    for elem in costs2:
-        srednia += elem
-        print(elem)
-    print("Srednia: " + (srednia/10).__str__())
-    print("Wyniki dla mixed hyperbolic")
-    srednia = 0
-    for elem in costs3:
-        srednia += elem
-        print(elem)
-    print("Srednia: " + (srednia/10).__str__())
-    print("Wyniki dla mixed exponential")
-    srednia = 0
-    for elem in costs4:
-        srednia += elem
-        print(elem)
-    print("Srednia: " + (srednia/10).__str__())
-
+    neighbour_test()
