@@ -12,7 +12,7 @@ class Type(Enum):
 class Mutation:
     def __init__(self, data):
         self.__type = Type.Invert
-        self.__mutation_chance = 0.01
+        self.__mutation_chance = 0.001
         self.__data = data
         self.__radioactivity = 0
 
@@ -21,17 +21,25 @@ class Mutation:
     def get_ratio(self):
         return self.__mutation_ratio
 
+    def get_mutation_chance(self):
+        return self.__mutation_chance
+
+    def set_mutation_chance(self, mutation):
+        self.__mutation_chance = mutation
+
+    def change_type(self, type_m):
+        self.__type = type_m
+
     def mutation_routine(self, population, points):
         self.__radioactivity += points
-        if self.__radioactivity >= 100:
-            self.__mutation_chance += 0.01
-            self.__mutation_chance = round(self.__mutation_chance, 2)
+        if self.__radioactivity >= 20:
+            self.__mutation_chance += self.__mutation_chance
+            self.__radioactivity = 0
+        elif self.__radioactivity < 0:
+            self.__mutation_chance = 0.001
             self.__radioactivity = 0
 
-        if self.__radioactivity < 0:
-            self.__mutation_chance = 0.01
-            self.__radioactivity = 0
-
+        self.__mutation_chance = round(self.__mutation_chance, 3)
         for elem in population:
             self.mutate(elem)
 

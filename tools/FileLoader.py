@@ -1,4 +1,5 @@
 import math
+import time
 
 
 class FileLoader:
@@ -32,9 +33,11 @@ class FileLoader:
 
             __file.close()
 
+        # TODO Blad dla wiekszych instancji (nie splituje wszystkich linii).
         #Case full matrix
         if "FULL_MATRIX" in self.__status:
-            line = __file.read().split()
+            line = __file.read()
+            line = line.split()
             self.__length = int(line.pop(0))
             counter = 0
             for i in range(self.__length):
