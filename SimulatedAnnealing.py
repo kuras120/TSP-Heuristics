@@ -253,13 +253,13 @@ class SimulatedAnnealing:
 
 
 if __name__ == "__main__":
-    annealing = SimulatedAnnealing("test/TSP/pr152.tsp", "COORDS_EUC")
+    annealing = SimulatedAnnealing("test/TSP/pr2392.tsp", "COORDS_EUC")
     # TYPE: GREEDY/GREEDY ONE/RANDOM
     # METHOD: INVERT/INSERT/SWAP/MIXED
     # TEMPERATURE: GEOMETRIC/EXPONENTIAL/SINUSOID/ARITHMETIC/LENGTH OF LIST
     # ITERATIONS: NUMBER
     tm = time.time()
-    annealing.calculate_sa_list(Type.GreedyOne, Method.Mixed, 0.49, 120, 25000)
-    # annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Geometric, 25000)
+    # annealing.calculate_sa_list(Type.GreedyOne, Method.Mixed, 0.49, 120, 25000)
+    annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Geometric, 50000)
     tm = time.time() - tm
     print("Processing time: " + tm.__str__())
