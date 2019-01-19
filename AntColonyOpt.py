@@ -40,7 +40,7 @@ class AntColonyOpt:
     def calculate(self, iterations, group_size, evaporation_percent, without_changes, local_search_type, path_params,
                   gui, interval):
 
-        print("Starting...\n")
+        # print("Starting...\n")
 
         d_time = time.time()
 
@@ -68,8 +68,8 @@ class AntColonyOpt:
             plt.plot(var_x, var_y, linestyle='--', marker='o', color='b')
             fig.canvas.draw()
 
-        print("START BEST: " + self.__start_best.__str__())
-        print("\nAlgorithm has been started\n")
+        # print("START BEST: " + self.__start_best.__str__())
+        # print("\nAlgorithm has been started\n")
 
         for i in range(iterations):
             self.__app_manager()
@@ -78,7 +78,7 @@ class AntColonyOpt:
             if self.__iterations_without_changes > without_changes:
                 self.__iterations_without_changes = 0
                 self.__local_best = [[], sys.maxsize]
-                print("NEIGHBOURHOOD SEARCH: " + self.__best_route.__str__() + " " + self.__best_cost.__str__())
+                # print("NEIGHBOURHOOD SEARCH: " + self.__best_route.__str__() + " " + self.__best_cost.__str__())
 
                 neighbours = self.__neighbours_generator.generate(self.__best_route, [])
                 neighbours.sort(key=lambda x: x[1])
@@ -151,16 +151,16 @@ class AntColonyOpt:
         found = False
         if temp_solution[1] < self.__local_best[1]:
             self.__local_best = [temp_solution[0], temp_solution[1]]
-            print("FOUND LOCAL BEST: " + temp_solution[0].__str__())
-            print("COST: " + temp_solution[1].__str__())
+            # print("FOUND LOCAL BEST: " + temp_solution[0].__str__())
+            # print("COST: " + temp_solution[1].__str__())
             self.__iterations_without_changes = int(self.__iterations_without_changes / 2)
             found = True
 
             if temp_solution[1] < self.__best_cost:
                 self.__best_cost = temp_solution[1]
                 self.__best_route = temp_solution[0]
-                print("FOUND BEST: " + temp_solution[0].__str__())
-                print("COST: " + temp_solution[1].__str__())
+                # print("FOUND BEST: " + temp_solution[0].__str__())
+                # print("COST: " + temp_solution[1].__str__())
                 self.__iterations_without_changes = 0
 
         return found

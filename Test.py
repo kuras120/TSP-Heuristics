@@ -61,6 +61,7 @@ if __name__ == "__main__":
 
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
+    print("testGR21 DONE")
 
     # --------------------------------------------------------------------------------------------------
     # PopMethod test
@@ -107,6 +108,8 @@ if __name__ == "__main__":
     test_file.write("----------GENETIC-CX----------\n")
     generate_test(costs_g2, times_g2)
 
+    print("testGR48-GA-PopMethod DONE")
+
     # --------------------------------------------------------------------------------------------------
     # Selection test
     genetic = Genetic("test/TSP/gr48.tsp", "LOWER_DIAG")
@@ -138,6 +141,8 @@ if __name__ == "__main__":
     # g1
     test_file.write("----------GENETIC-TOURNAMENT----------\n")
     generate_test(costs_g1, times_g1)
+
+    print("testGR48-GA-Selection DONE")
 
     # --------------------------------------------------------------------------------------------------
 
@@ -171,6 +176,8 @@ if __name__ == "__main__":
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
 
+    print("testGR48 DONE")
+
     # --------------------------------------------------------------------------------------------------
 
     genetic = Genetic("test/TSP/gr96.tsp", "COORDS_GEO")
@@ -203,6 +210,8 @@ if __name__ == "__main__":
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
 
+    print("testGR96 DONE")
+
     # --------------------------------------------------------------------------------------------------
 
     genetic = Genetic("test/TSP/gr120.tsp", "LOWER_DIAG")
@@ -234,3 +243,5 @@ if __name__ == "__main__":
 
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
+
+    print("testGR120 DONE")
