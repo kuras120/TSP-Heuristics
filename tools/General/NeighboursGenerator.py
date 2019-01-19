@@ -1,6 +1,8 @@
-from enum import Enum
 import random
 import sys
+from enum import Enum
+
+from tools.FileLoader import *
 
 
 class Method(Enum):
@@ -14,6 +16,7 @@ class Method(Enum):
     Mixed = 7
     TwoOpt = 8
     ThreeOpt = 9
+    ThreeOpt_Alternative = 10
 
 
 class NeighboursGenerator:
@@ -33,7 +36,8 @@ class NeighboursGenerator:
     def get_method(self):
         return self.__method
 
-    def in_tabu_list(self, path, tabu):
+    @staticmethod
+    def in_tabu_list(path, tabu):
         for elem in tabu:
             if path in elem:
                 return True
@@ -60,15 +64,16 @@ class NeighboursGenerator:
         elif self.__method == Method.SwapOne:
             swap_index = random.randrange(self.__number_of_cities - 1)
             for i in range(parent_path.__len__()):
-                neighbour = parent_path.copy()
-                neighbour[swap_index], neighbour[i] = neighbour[i], neighbour[swap_index]
-                neighbour = [index] + neighbour + [index]
-                # if not self.in_tabu_list(neighbour, tabu):
-                neighbour_cost = 0
-                for j in range(1, neighbour.__len__()):
-                    neighbour_cost += self.__data[neighbour[j - 1]][neighbour[j]]
+                if i != swap_index:
+                    neighbour = parent_path.copy()
+                    neighbour[swap_index], neighbour[i] = neighbour[i], neighbour[swap_index]
+                    neighbour = [index] + neighbour + [index]
+                    # if not self.in_tabu_list(neighbour, tabu):
+                    neighbour_cost = 0
+                    for j in range(1, neighbour.__len__()):
+                        neighbour_cost += self.__data[neighbour[j - 1]][neighbour[j]]
 
-                neighbours.append([neighbour, round(neighbour_cost, 2)])
+                    neighbours.append([neighbour, round(neighbour_cost, 2)])
 
         elif self.__method == Method.Swap:
             for i in range(parent_path.__len__()):
@@ -100,17 +105,18 @@ class NeighboursGenerator:
 
         elif self.__method == Method.Insert:
             for i in range(parent_path.__len__()):
-                for j in range(i + 1, parent_path.__len__()):
-                    neighbour = parent_path.copy()
-                    item = neighbour.pop(i)
-                    neighbour.insert(j, item)
-                    neighbour = [index] + neighbour + [index]
-                    # if not self.in_tabu_list(neighbour, tabu):
-                    neighbour_cost = 0
-                    for k in range(1, neighbour.__len__()):
-                        neighbour_cost += self.__data[neighbour[k - 1]][neighbour[k]]
+                for j in range(parent_path.__len__()):
+                    if i != j:
+                        neighbour = parent_path.copy()
+                        item = neighbour.pop(i)
+                        neighbour.insert(j, item)
+                        neighbour = [index] + neighbour + [index]
+                        # if not self.in_tabu_list(neighbour, tabu):
+                        neighbour_cost = 0
+                        for k in range(1, neighbour.__len__()):
+                            neighbour_cost += self.__data[neighbour[k - 1]][neighbour[k]]
 
-                    neighbours.append([neighbour, round(neighbour_cost, 2)])
+                        neighbours.append([neighbour, round(neighbour_cost, 2)])
 
         elif self.__method == Method.InvertOne:
             invert_index = random.randrange(self.__number_of_cities - 1)
@@ -131,9 +137,9 @@ class NeighboursGenerator:
 
         elif self.__method == Method.Invert:
             for i in range(parent_path.__len__()):
-                for j in range(i + 1, parent_path.__len__()):
+                for j in range(i + 2, parent_path.__len__()):
                     neighbour = parent_path.copy()
-                    neighbour[i:j + 1] = reversed(neighbour[i:j + 1])
+                    neighbour[i:j] = reversed(neighbour[i:j])
                     neighbour = [index] + neighbour + [index]
                     # if not self.in_tabu_list(neighbour, tabu):
                     neighbour_cost = 0
@@ -144,13 +150,30 @@ class NeighboursGenerator:
 
         elif self.__method == Method.ThreeOpt:
             for i in range(parent_path.__len__()):
-                for j in range(i + 1, parent_path.__len__()):
-                    for k in range(j + 1, parent_path.__len__()):
+                for j in range(i + 2, parent_path.__len__()):
+                    for k in range(j + 2, parent_path.__len__() + 1):
                         neighbour = parent_path.copy()
-                        neighbour[i:j + 1] = reversed(neighbour[i:j + 1])
-                        neighbour[j:k + 1] = reversed(neighbour[j:k + 1])
+                        neighbour[i:j] = reversed(neighbour[i:j])
+                        neighbour[j:k] = reversed(neighbour[j:k])
 
                         neighbour = [index] + neighbour + [index]
+                        # if not self.in_tabu_list(neighbour, tabu):
+                        neighbour_cost = 0
+                        for l in range(1, neighbour.__len__()):
+                            neighbour_cost += self.__data[neighbour[l - 1]][neighbour[l]]
+
+                        neighbours.append([neighbour, round(neighbour_cost, 2)])
+
+        elif self.__method == Method.ThreeOpt_Alternative:
+            parent_path = [index] + parent_path
+            for i in range(parent_path.__len__()):
+                for j in range(i + 2, parent_path.__len__()):
+                    for k in range(j + 2, parent_path.__len__() + 1):
+                        neighbour = parent_path.copy()
+                        neighbour[i:j] = reversed(neighbour[i:j])
+                        neighbour[j:k] = reversed(neighbour[j:k])
+
+                        neighbour = neighbour + [neighbour[0]]
                         # if not self.in_tabu_list(neighbour, tabu):
                         neighbour_cost = 0
                         for l in range(1, neighbour.__len__()):
@@ -226,12 +249,12 @@ class NeighboursGenerator:
             self.change_method(Method.Mixed)
 
         elif self.__method == Method.ThreeOpt:
-            i = random.randrange(neighbour.__len__() - 2)
-            j = random.randrange(i + 1, neighbour.__len__() - 1)
-            k = random.randrange(j + 1, neighbour.__len__())
+            i = random.randrange(neighbour.__len__() - 3)
+            j = random.randrange(i + 2, neighbour.__len__() - 1)
+            k = random.randrange(j + 2, neighbour.__len__() + 1)
 
-            neighbour[i:j + 1] = reversed(neighbour[i:j + 1])
-            neighbour[j:k + 1] = reversed(neighbour[j:k + 1])
+            neighbour[i:j] = reversed(neighbour[i:j])
+            neighbour[j:k] = reversed(neighbour[j:k])
 
             neighbour = [index] + neighbour + [index]
             neighbour_cost = 0
@@ -242,3 +265,17 @@ class NeighboursGenerator:
             raise Exception("Method named " + self.__method.name + " doesn't exist.")
 
         return [neighbour, round(neighbour_cost, 2)]
+
+
+if __name__ == "__main__":
+    loader = FileLoader()
+    loader.load("../../test/TSP/gr8.tsp", "LOWER_DIAG")
+    gen = NeighboursGenerator(loader.get_data())
+    gen.change_method(Method.ThreeOpt_Alternative)
+    group = gen.generate([0, 1, 2, 3, 4, 5, 6, 7, 0], [])
+    for elem in group:
+        print(elem)
+# print("\n")
+# group1 = gen.generate_one([0, 1, 2, 3, 4, 5, 6, 7, 0])
+# for elem in group1:
+#     print(elem)

@@ -1,12 +1,8 @@
-from tools.FileLoader import *
-from tools.KBHit import *
+import time
+
 from tools.General.NeighboursGenerator import *
 from tools.General.SolutionGenerator import *
-import sys
-import random
-import math
-import time
-import matplotlib.pyplot as plt
+from tools.KBHit import *
 
 
 class Temperature(Enum):
@@ -31,7 +27,7 @@ class SimulatedAnnealing:
         self.__data = self.__loader.get_data()
         self.__best_route = []
         self.__best_cost = sys.maxsize
-        self.__start_best = [None, None]
+        self.__start_best = []
 
         # Generator rozwiazan
         self.__solution = SolutionGenerator(self.__file, self.__type_t, self.__data)
@@ -166,17 +162,17 @@ class SimulatedAnnealing:
         if func == Temperature.Sinusoid:
             return round((4999 * math.sin(2 * math.pi * i * 0.0005 + (math.pi / 2))) + 5001, 4)
         elif func == Temperature.Hyperbolic:
-            temperature = self.__temperature_max/(i - self.__d)
+            temperature = self.__temperature_max / (i - self.__d)
             if temperature < 2:
                 self.__d = i
             return round(temperature, 4)
         elif func == Temperature.Exponential:
-            temperature = math.pow(math.e, -i/100 + (self.__d/100)) * self.__temperature_max
+            temperature = math.pow(math.e, -i / 100 + (self.__d / 100)) * self.__temperature_max
             if temperature < 1:
                 self.__d = i
             return round(temperature, 4)
         elif func == Temperature.Geometric:
-            self.__temperature = self.__temperature/2
+            self.__temperature = self.__temperature / 2
             if self.__temperature <= 0:
                 self.__temperature = self.__temperature_max
             return self.__temperature
@@ -219,7 +215,7 @@ class SimulatedAnnealing:
     def clear_values(self):
         self.__best_route = []
         self.__best_cost = sys.maxsize
-        self.__start_best = [None, None]
+        self.__start_best = []
         # Temperatura
         self.__temperature_max = 10000
         self.__temperature = self.__temperature_max
@@ -253,13 +249,13 @@ class SimulatedAnnealing:
 
 
 if __name__ == "__main__":
-    annealing = SimulatedAnnealing("test/TSP/pr2392.tsp", "COORDS_EUC")
+    annealing = SimulatedAnnealing("test/TSP/pr439.tsp", "COORDS_EUC")
     # TYPE: GREEDY/GREEDY ONE/RANDOM
     # METHOD: INVERT/INSERT/SWAP/MIXED
     # TEMPERATURE: GEOMETRIC/EXPONENTIAL/SINUSOID/ARITHMETIC/LENGTH OF LIST
     # ITERATIONS: NUMBER
     tm = time.time()
-    # annealing.calculate_sa_list(Type.GreedyOne, Method.Mixed, 0.49, 120, 25000)
-    annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Geometric, 50000)
+    annealing.calculate_sa_list(Type.GreedyOne, Method.Mixed, 0.49, 120, 50000)
+    # annealing.calculate(Type.GreedyOne, Method.Mixed, Temperature.Geometric, 50000)
     tm = time.time() - tm
     print("Processing time: " + tm.__str__())

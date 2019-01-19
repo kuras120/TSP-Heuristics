@@ -1,5 +1,4 @@
 import math
-import time
 
 
 class FileLoader:
@@ -13,7 +12,7 @@ class FileLoader:
         __file = open(filename)
         self.__status = status
 
-        #Case lower diag
+        # Case lower diag
         if "LOWER_DIAG" in self.__status:
             line = __file.read().split()
             self.__length = int(line.pop(0))
@@ -26,7 +25,7 @@ class FileLoader:
                 self.__coords.append(temp)
             temp = []
             temp_counter = counter
-            for k in range(counter, temp_counter+self.__length):
+            for k in range(counter, temp_counter + self.__length):
                 temp.append(int(line[k]))
             self.__coords.append(temp)
             self.__data_processing()
@@ -34,7 +33,7 @@ class FileLoader:
             __file.close()
 
         # TODO Blad dla wiekszych instancji (nie splituje wszystkich linii).
-        #Case full matrix
+        # Case full matrix
         if "FULL_MATRIX" in self.__status:
             line = __file.read()
             line = line.split()
@@ -50,7 +49,7 @@ class FileLoader:
 
             __file.close()
 
-        #Case coords euclides
+        # Case coords euclides
         if "COORDS" in self.__status:
             lines = __file.readlines()
             self.__length = int(lines.pop(0))
@@ -103,7 +102,8 @@ class FileLoader:
 
                     self.__final_matrix[i][j] = distance
 
-    def to_radians(self, PI, coordinate):
+    @staticmethod
+    def to_radians(PI, coordinate):
         deg = round(coordinate)
         min = coordinate - deg
         rad = PI * (deg + 5.0 * min / 3.0) / 180.0
@@ -124,7 +124,7 @@ class FileLoader:
     def print_data(self):
         iterator = 0
         for elem in self.__final_matrix:
-            print('\n'+ iterator.__str__() + " " + elem.__str__() + '\n')
+            print('\n' + iterator.__str__() + " " + elem.__str__() + '\n')
             iterator += 1
 
     def get_data(self):
