@@ -114,9 +114,9 @@ class AntColonyOpt:
 
             self.__iterations_without_changes += 1
 
-        print("\n\n")
-        print(self.get_solution_in_time().__str__())
-        self.print_solution()
+        # print("\n\n")
+        # print(self.get_solution_in_time().__str__())
+        # self.print_solution()
 
         if gui:
             plt.show()

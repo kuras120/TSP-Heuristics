@@ -146,9 +146,9 @@ class Genetic:
             sorted_population = sorted(population, key=lambda x: x[1])
             sorted_population = sorted_population[:population_size]
 
-        print("\n\n")
-        print(self.get_solution_in_time().__str__())
-        self.print_solution()
+        # print("\n\n")
+        # print(self.get_solution_in_time().__str__())
+        # self.print_solution()
 
         if gui:
             plt.show()
