@@ -42,7 +42,7 @@ class Genetic:
     def calculate(self, iterations, population_size, mutation_type, mutation_reset, cross_type, selection_type,
                   steady_state, select_size, gui, interval):
 
-        # print("Starting...\n")
+        print("Starting...\n")
 
         d_time = time.time()
 
@@ -74,13 +74,12 @@ class Genetic:
             plt.plot(var_x, var_y, linestyle='--', marker='o', color='b')
             fig.canvas.draw()
 
-        # print("START BEST: " + sorted_population[0][0].__str__())
-        # print("WITH COST: " + sorted_population[0][1].__str__())
-        #
-        # print("\nAlgorithm has been started\n")
+        print("START BEST: " + sorted_population[0][0].__str__())
+        print("WITH COST: " + sorted_population[0][1].__str__())
+
+        print("\nAlgorithm has been started\n")
 
         for i in range(iterations):
-
             self.__app_manager()
             self.__radioactivity = 0
 
@@ -146,9 +145,9 @@ class Genetic:
             sorted_population = sorted(population, key=lambda x: x[1])
             sorted_population = sorted_population[:population_size]
 
-        # print("\n\n")
-        # print(self.get_solution_in_time().__str__())
-        # self.print_solution()
+        print("\n\n")
+        print(self.get_solution_in_time().__str__())
+        self.print_solution()
 
         if gui:
             plt.show()
@@ -196,15 +195,15 @@ class Genetic:
     def check_for_best(self, best_person):
         if best_person[1] < self.__local_best_cost:
             self.__local_best_cost = best_person[1]
-            # print("FOUND LOCAL BEST: " + best_person[0].__str__())
-            # print("COST: " + best_person[1].__str__())
+            print("FOUND LOCAL BEST: " + best_person[0].__str__())
+            print("COST: " + best_person[1].__str__())
 
             if best_person[1] < self.__best_cost:
                 self.__best_cost = best_person[1]
                 self.__best_route = best_person[0]
                 self.__radioactivity -= 20
-                # print("FOUND BEST: " + self.__best_route.__str__())
-                # print("COST: " + self.__best_cost.__str__())
+                print("FOUND BEST: " + self.__best_route.__str__())
+                print("COST: " + self.__best_cost.__str__())
 
             self.__radioactivity -= 8
 

@@ -41,17 +41,18 @@ if __name__ == "__main__":
     times_a = []
 
     for test1 in range(10):
+        print(test1)
         genetic.calculate(100, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
                           int(pop_size * 0.12), False, 10)
         c_g, tl_g = genetic.get_solution_in_time()
         costs_g.append(c_g)
         times_g.append(tl_g)
-
+        print("Complete 1")
         ant_colony.calculate(100, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 10)
         c_a, tl_a = ant_colony.get_solution_in_time()
         costs_a.append(c_a)
         times_a.append(tl_a)
-
+        print("Complete 2")
         genetic.clear_values()
         ant_colony.clear_values()
 
@@ -61,6 +62,8 @@ if __name__ == "__main__":
 
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
+
+    test_file.close()
     print("testGR21 DONE")
 
     # --------------------------------------------------------------------------------------------------
@@ -75,26 +78,28 @@ if __name__ == "__main__":
     times_g2 = []
 
     for test1 in range(10):
+        print(test1)
         genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
                           int(pop_size * 0.12), False, 250)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g.append([c_g])
-        times_g.append([tl_g])
+        costs_g.append(c_g)
+        times_g.append(tl_g)
         genetic.clear_values()
-
+        print("Complete 1")
         genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.PMX, Selection.RouletteWheel, True,
                           int(pop_size * 0.12), False, 250)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g1.append([c_g])
-        times_g1.append([tl_g])
+        costs_g1.append(c_g)
+        times_g1.append(tl_g)
         genetic.clear_values()
-
+        print("Complete 2")
         genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.CX, Selection.RouletteWheel, True,
                           int(pop_size * 0.12), False, 250)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g2.append([c_g])
-        times_g2.append([tl_g])
+        costs_g2.append(c_g)
+        times_g2.append(tl_g)
         genetic.clear_values()
+        print("Complete 3")
 
     test_file = open("test/GA&ACO/testGR48-GA-PopMethod.txt", "w+")
     test_file.write("----------GENETIC-OX1----------\n")
@@ -108,6 +113,7 @@ if __name__ == "__main__":
     test_file.write("----------GENETIC-CX----------\n")
     generate_test(costs_g2, times_g2)
 
+    test_file.close()
     print("testGR48-GA-PopMethod DONE")
 
     # --------------------------------------------------------------------------------------------------
@@ -120,20 +126,21 @@ if __name__ == "__main__":
     times_g1 = []
 
     for test1 in range(10):
+        print(test1)
         genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
                           int(pop_size * 0.12), False, 250)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g.append([c_g])
-        times_g.append([tl_g])
+        costs_g.append(c_g)
+        times_g.append(tl_g)
         genetic.clear_values()
-
+        print("Complete 1")
         genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.Tournament, False,
                           int(pop_size * 0.12), False, 250)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g1.append([c_g])
-        times_g1.append([tl_g])
+        costs_g1.append(c_g)
+        times_g1.append(tl_g)
         genetic.clear_values()
-
+        print("Complete 2")
     test_file = open("test/GA&ACO/testGR48-GA-Selection.txt", "w+")
     test_file.write("----------GENETIC-ROULETTE----------\n")
     generate_test(costs_g, times_g)
@@ -142,6 +149,7 @@ if __name__ == "__main__":
     test_file.write("----------GENETIC-TOURNAMENT----------\n")
     generate_test(costs_g1, times_g1)
 
+    test_file.close()
     print("testGR48-GA-Selection DONE")
 
     # --------------------------------------------------------------------------------------------------
@@ -155,17 +163,18 @@ if __name__ == "__main__":
     times_a = []
 
     for test1 in range(10):
+        print(test1)
         genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
                           int(pop_size * 0.12), False, 250)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g.append([c_g])
-        times_g.append([tl_g])
-
+        costs_g.append(c_g)
+        times_g.append(tl_g)
+        print("Complete 1")
         ant_colony.calculate(2500, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 250)
         c_a, tl_a = ant_colony.get_solution_in_time()
-        costs_a.append([c_a])
-        times_a.append([tl_a])
-
+        costs_a.append(c_a)
+        times_a.append(tl_a)
+        print("Complete 2")
         genetic.clear_values()
         ant_colony.clear_values()
 
@@ -176,6 +185,7 @@ if __name__ == "__main__":
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
 
+    test_file.close()
     print("testGR48 DONE")
 
     # --------------------------------------------------------------------------------------------------
@@ -189,17 +199,18 @@ if __name__ == "__main__":
     times_a = []
 
     for test1 in range(10):
+        print(test1)
         genetic.calculate(5000, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
                           int(pop_size * 0.12), False, 500)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g.append([c_g])
-        times_g.append([tl_g])
-
+        costs_g.append(c_g)
+        times_g.append(tl_g)
+        print("Complete 1")
         ant_colony.calculate(5000, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 500)
         c_a, tl_a = ant_colony.get_solution_in_time()
-        costs_a.append([c_a])
-        times_a.append([tl_a])
-
+        costs_a.append(c_a)
+        times_a.append(tl_a)
+        print("Complete 2")
         genetic.clear_values()
         ant_colony.clear_values()
 
@@ -210,6 +221,7 @@ if __name__ == "__main__":
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
 
+    test_file.close()
     print("testGR96 DONE")
 
     # --------------------------------------------------------------------------------------------------
@@ -223,17 +235,18 @@ if __name__ == "__main__":
     times_a = []
 
     for test1 in range(10):
-        genetic.calculate(5000, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
-                          int(pop_size * 0.12), False, 500)
+        print(test1)
+        genetic.calculate(7500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 750)
         c_g, tl_g = genetic.get_solution_in_time()
-        costs_g.append([c_g])
-        times_g.append([tl_g])
-
-        ant_colony.calculate(5000, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 500)
+        costs_g.append(c_g)
+        times_g.append(tl_g)
+        print("Complete 1")
+        ant_colony.calculate(7500, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 750)
         c_a, tl_a = ant_colony.get_solution_in_time()
-        costs_a.append([c_a])
-        times_a.append([tl_a])
-
+        costs_a.append(c_a)
+        times_a.append(tl_a)
+        print("Complete 2")
         genetic.clear_values()
         ant_colony.clear_values()
 
@@ -244,4 +257,5 @@ if __name__ == "__main__":
     test_file.write("----------ANT-COLONY----------\n")
     generate_test(costs_a, times_a)
 
+    test_file.close()
     print("testGR120 DONE")
