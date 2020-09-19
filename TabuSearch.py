@@ -1,11 +1,8 @@
+import time
+
 from tools.General.NeighboursGenerator import *
 from tools.General.SolutionGenerator import *
-from tools.FileLoader import *
 from tools.KBHit import *
-from enum import Enum
-import sys
-import random
-import time
 
 
 class Diversification(Enum):
@@ -32,7 +29,7 @@ class TabuSearch:
         self.__data = self.__loader.get_data()
         self.__best_route = []
         self.__best_cost = sys.maxsize
-        self.__start_best = [None, None]
+        self.__start_best = []
 
         # Generator sasiedztwa
         self.__neighbours = NeighboursGenerator(self.__data)
@@ -95,17 +92,17 @@ class TabuSearch:
 
         # print(self.__size_of_search)
 
-        best_neighbour = 0
+        best_neighbour = None
 
-        for elem in neighbours:
-            if not self.__neighbours.in_tabu_list(elem, self.__tabu_list):
-                best_neighbour = elem
+        for neighbour in neighbours:
+            if not self.__neighbours.in_tabu_list(neighbour, self.__tabu_list):
+                best_neighbour = neighbour
                 break
 
         print("LOCAL BEST: " + best_neighbour.__str__())
 
-        if best_neighbour == 0:
-            best_neighbour = neighbours[random.randrange(neighbours.__len__())]
+        if not best_neighbour:
+            best_neighbour = neighbours[0]
 
         self.check_for_best(best_neighbour)
         self.long_term_memory(best_neighbour)
@@ -178,10 +175,10 @@ class TabuSearch:
     # --------------------------------  END  --------------------------------
 
     def tabu_list_routine(self):
-        for elem in self.__tabu_list:
-            elem[1] -= 1
-            if elem[1] == 0:
-                self.__tabu_list.remove(elem)
+        for tabu_elem in self.__tabu_list:
+            tabu_elem[1] -= 1
+            if tabu_elem[1] == 0:
+                self.__tabu_list.remove(tabu_elem)
 
     def reset(self, diversification):
         self.__weaker_neighbour = -1
@@ -236,7 +233,7 @@ class TabuSearch:
     def clear_values(self):
         self.__best_route = []
         self.__best_cost = sys.maxsize
-        self.__start_best = [None, None]
+        self.__start_best = []
 
         # Lista tabu
         self.__tabu_list = []
@@ -267,12 +264,12 @@ class TabuSearch:
 
 
 if __name__ == "__main__":
-    tabu = TabuSearch("test/TSP/gr120.tsp", "LOWER_DIAG")
+    tabu = TabuSearch("test/TSP/pr439.tsp", "COORDS_EUC")
     # TYPE: GREEDY/RANDOM, METHOD: SWAP NEAREST/SWAP WITH OTHERS
     # CYCLE: WITH WEAKER NEIGHBOURS/ASPIRATION ONLY
     # DIVERSIFICATION: FIXED/CONSTANT/MEMORY
     # ITERATIONS: NUMBER
     tm = time.time()
-    tabu.calculate(Type.Greedy, Method.Invert, Cycle.WithWeakerNeighbours, Diversification.Fixed, 2000)
+    tabu.calculate(Type.Greedy, Method.InvertOne, Cycle.AspirationOnly, Diversification.Fixed, 3000)
     tm = time.time() - tm
     print("Processing time: " + tm.__str__())

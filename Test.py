@@ -1,22 +1,485 @@
-from SimulatedAnnealing import *
-from TabuSearch import *
+from Genetic import Genetic, Method as PopMethod, MType, Selection
+from AntColonyOpt import AntColonyOpt, Method
 
 
-def neighbour_test():
-    ann = SimulatedAnnealing("test/TSP/pr226.tsp", "COORDS_EUC")
-    data = ann.get_data()
-    sol = [93, 136, 143, 145, 137, 138, 144, 146, 139, 140, 141, 142, 149, 147, 148, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172
-, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 135, 134, 133, 132, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200, 201, 202, 203, 204, 205, 206, 207, 208
-, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 225, 224, 124, 131, 129, 123, 122, 130, 128, 121, 120, 126, 127, 125, 119, 118, 109, 117, 116, 108, 107, 106, 115, 114, 113
-, 105, 103, 112, 104, 111, 110, 102, 65, 69, 68, 67, 66, 16, 15, 10, 11, 12, 70, 71, 85, 84, 83, 82, 81, 80, 79, 78, 77, 76, 75, 74, 73, 72, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 13, 14, 17, 18, 64, 19, 63, 62, 61, 60, 59, 58, 57, 56, 55, 54, 53, 52, 51, 50, 49, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 33, 34, 35, 30, 31, 32, 47, 48, 46, 45, 44, 43, 36, 37, 38, 41, 39, 40, 42, 94, 86, 88, 95, 87, 96, 97, 89, 90, 98, 99, 91, 92, 100, 101, 93]
-
-    cost = 0
-    for i in range(1, sol.__len__()):
-        cost += data[sol[i-1]][sol[i]]
-
-    print(sol)
-    print(cost)
-
-
+def 
 if __name__ == "__main__":
-    neighbour_test()
+
+    pop_size = 100
+    ant_group = 25
+
+    genetic = Genetic("test/TSP/gr21.tsp", "LOWER_DIAG")
+    ant_colony = AntColonyOpt("test/TSP/gr21.tsp", "LOWER_DIAG")
+
+    costs_g = []
+    times_g = []
+    costs_a = []
+    times_a = []
+
+    for test1 in range(10):
+        genetic.calculate(100, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 10)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g.append(c_g)
+        times_g.append(tl_g)
+
+        ant_colony.calculate(100, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 10)
+        c_a, tl_a = ant_colony.get_solution_in_time()
+        costs_a.append(c_a)
+        times_a.append(tl_a)
+
+        genetic.clear_values()
+        ant_colony.clear_values()
+
+    test_file = open("test/GA&ACO/testGR21.txt", "w+")
+    test_file.write("----------GENETIC----------\n")
+    average = [0] * (costs_g.__len__() + 1)
+    for it in range(costs_g.__len__()):
+        test_file.write(costs_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g[it].__len__()):
+            average[it2] += costs_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g.__len__() + 1)
+    for it in range(times_g.__len__()):
+        test_file.write(times_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g[it].__len__()):
+            average[it2] += times_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("----------ANT-COLONY----------\n")
+    average = [0] * (costs_a.__len__() + 1)
+    for it in range(costs_a.__len__()):
+        test_file.write(costs_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_a[it].__len__()):
+            average[it2] += costs_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_a.__len__() + 1)
+    for it in range(times_a.__len__()):
+        test_file.write(times_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_a[it].__len__()):
+            average[it2] += times_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # --------------------------------------------------------------------------------------------------
+    # PopMethod test
+    genetic = Genetic("test/TSP/gr48.tsp", "LOWER_DIAG")
+
+    costs_g = []
+    times_g = []
+    costs_g1 = []
+    times_g1 = []
+    costs_g2 = []
+    times_g2 = []
+
+    for test1 in range(10):
+        genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 250)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g.append([c_g])
+        times_g.append([tl_g])
+        genetic.clear_values()
+
+        genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.PMX, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 250)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g1.append([c_g])
+        times_g1.append([tl_g])
+        genetic.clear_values()
+
+        genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.CX, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 250)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g2.append([c_g])
+        times_g2.append([tl_g])
+        genetic.clear_values()
+
+    test_file = open("test/GA&ACO/testGR48-GA-PopMethod.txt", "w+")
+    test_file.write("----------GENETIC-OX1----------\n")
+    average = [0] * (costs_g.__len__() + 1)
+    for it in range(costs_g.__len__()):
+        test_file.write(costs_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g[it].__len__()):
+            average[it2] += costs_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g.__len__() + 1)
+    for it in range(times_g.__len__()):
+        test_file.write(times_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g[it].__len__()):
+            average[it2] += times_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # g1
+    test_file.write("----------GENETIC-PMX----------\n")
+    average = [0] * (costs_g1.__len__() + 1)
+    for it in range(costs_g1.__len__()):
+        test_file.write(costs_g1[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g1[it].__len__()):
+            average[it2] += costs_g1[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g1.__len__() + 1)
+    for it in range(times_g1.__len__()):
+        test_file.write(times_g1[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g1[it].__len__()):
+            average[it2] += times_g1[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # g2
+    test_file.write("----------GENETIC-CX----------\n")
+    average = [0] * (costs_g2.__len__() + 1)
+    for it in range(costs_g2.__len__()):
+        test_file.write(costs_g2[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g2[it].__len__()):
+            average[it2] += costs_g2[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g2.__len__() + 1)
+    for it in range(times_g2.__len__()):
+        test_file.write(times_g2[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g2[it].__len__()):
+            average[it2] += times_g2[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # --------------------------------------------------------------------------------------------------
+    # Selection test
+    genetic = Genetic("test/TSP/gr48.tsp", "LOWER_DIAG")
+
+    costs_g = []
+    times_g = []
+    costs_g1 = []
+    times_g1 = []
+
+    for test1 in range(10):
+        genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 250)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g.append([c_g])
+        times_g.append([tl_g])
+        genetic.clear_values()
+
+        genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.Tournament, False,
+                          int(pop_size * 0.12), False, 250)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g1.append([c_g])
+        times_g1.append([tl_g])
+        genetic.clear_values()
+
+    test_file = open("test/GA&ACO/testGR48-GA-Selection.txt", "w+")
+    test_file.write("----------GENETIC-ROULETTE----------\n")
+    average = [0] * (costs_g.__len__() + 1)
+    for it in range(costs_g.__len__()):
+        test_file.write(costs_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g[it].__len__()):
+            average[it2] += costs_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g.__len__() + 1)
+    for it in range(times_g.__len__()):
+        test_file.write(times_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g[it].__len__()):
+            average[it2] += times_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # g1
+    test_file.write("----------GENETIC-TOURNAMENT----------\n")
+    average = [0] * (costs_g1.__len__() + 1)
+    for it in range(costs_g1.__len__()):
+        test_file.write(costs_g1[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g1[it].__len__()):
+            average[it2] += costs_g1[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g1.__len__() + 1)
+    for it in range(times_g1.__len__()):
+        test_file.write(times_g1[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g1[it].__len__()):
+            average[it2] += times_g1[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # --------------------------------------------------------------------------------------------------
+
+    genetic = Genetic("test/TSP/gr48.tsp", "LOWER_DIAG")
+    ant_colony = AntColonyOpt("test/TSP/gr48.tsp", "LOWER_DIAG")
+
+    costs_g = []
+    times_g = []
+    costs_a = []
+    times_a = []
+
+    for test1 in range(10):
+        genetic.calculate(2500, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 250)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g.append([c_g])
+        times_g.append([tl_g])
+
+        ant_colony.calculate(2500, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 250)
+        c_a, tl_a = ant_colony.get_solution_in_time()
+        costs_a.append([c_a])
+        times_a.append([tl_a])
+
+        genetic.clear_values()
+        ant_colony.clear_values()
+
+    test_file = open("test/GA&ACO/testGR48.txt", "w+")
+    test_file.write("----------GENETIC----------\n")
+    average = [0] * (costs_g.__len__() + 1)
+    for it in range(costs_g.__len__()):
+        test_file.write(costs_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g[it].__len__()):
+            average[it2] += costs_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g.__len__() + 1)
+    for it in range(times_g.__len__()):
+        test_file.write(times_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g[it].__len__()):
+            average[it2] += times_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("----------ANT-COLONY----------\n")
+    average = [0] * (costs_a.__len__() + 1)
+    for it in range(costs_a.__len__()):
+        test_file.write(costs_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_a[it].__len__()):
+            average[it2] += costs_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_a.__len__() + 1)
+    for it in range(times_a.__len__()):
+        test_file.write(times_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_a[it].__len__()):
+            average[it2] += times_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # --------------------------------------------------------------------------------------------------
+
+    genetic = Genetic("test/TSP/gr96.tsp", "COORDS_GEO")
+    ant_colony = AntColonyOpt("test/TSP/gr96.tsp", "COORDS_GEO")
+
+    costs_g = []
+    times_g = []
+    costs_a = []
+    times_a = []
+
+    for test1 in range(10):
+        genetic.calculate(5000, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 500)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g.append([c_g])
+        times_g.append([tl_g])
+
+        ant_colony.calculate(5000, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 500)
+        c_a, tl_a = ant_colony.get_solution_in_time()
+        costs_a.append([c_a])
+        times_a.append([tl_a])
+
+        genetic.clear_values()
+        ant_colony.clear_values()
+
+    test_file = open("test/GA&ACO/testGR96.txt", "w+")
+    test_file.write("----------GENETIC----------\n")
+    average = [0] * (costs_g.__len__() + 1)
+    for it in range(costs_g.__len__()):
+        test_file.write(costs_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g[it].__len__()):
+            average[it2] += costs_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g.__len__() + 1)
+    for it in range(times_g.__len__()):
+        test_file.write(times_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g[it].__len__()):
+            average[it2] += times_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("----------ANT-COLONY----------\n")
+    average = [0] * (costs_a.__len__() + 1)
+    for it in range(costs_a.__len__()):
+        test_file.write(costs_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_a[it].__len__()):
+            average[it2] += costs_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_a.__len__() + 1)
+    for it in range(times_a.__len__()):
+        test_file.write(times_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_a[it].__len__()):
+            average[it2] += times_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    # --------------------------------------------------------------------------------------------------
+
+    genetic = Genetic("test/TSP/gr120.tsp", "LOWER_DIAG")
+    ant_colony = AntColonyOpt("test/TSP/gr120.tsp", "LOWER_DIAG")
+
+    costs_g = []
+    times_g = []
+    costs_a = []
+    times_a = []
+
+    for test1 in range(10):
+        genetic.calculate(5000, pop_size, MType.Invert, 0.08, PopMethod.OX1, Selection.RouletteWheel, True,
+                          int(pop_size * 0.12), False, 500)
+        c_g, tl_g = genetic.get_solution_in_time()
+        costs_g.append([c_g])
+        times_g.append([tl_g])
+
+        ant_colony.calculate(5000, ant_group, 0.50, 7 * ant_group, Method.Invert, (5, 1), False, 500)
+        c_a, tl_a = ant_colony.get_solution_in_time()
+        costs_a.append([c_a])
+        times_a.append([tl_a])
+
+        genetic.clear_values()
+        ant_colony.clear_values()
+
+    test_file = open("test/GA&ACO/testGR120.txt", "w+")
+    test_file.write("----------GENETIC----------\n")
+    average = [0] * (costs_g.__len__() + 1)
+    for it in range(costs_g.__len__()):
+        test_file.write(costs_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_g[it].__len__()):
+            average[it2] += costs_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_g.__len__() + 1)
+    for it in range(times_g.__len__()):
+        test_file.write(times_g[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_g[it].__len__()):
+            average[it2] += times_g[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("----------ANT-COLONY----------\n")
+    average = [0] * (costs_a.__len__() + 1)
+    for it in range(costs_a.__len__()):
+        test_file.write(costs_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(costs_a[it].__len__()):
+            average[it2] += costs_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")
+
+    test_file.write("\n")
+    average = [0] * (times_a.__len__() + 1)
+    for it in range(times_a.__len__()):
+        test_file.write(times_a[it].__str__().replace('[', '').replace(']', '') + "\n")
+        for it2 in range(times_a[it].__len__()):
+            average[it2] += times_a[it][it2]
+    for it in range(average.__len__()):
+        average[it] /= 10
+        average[it] = round(average[it], 2)
+    test_file.write("----------AVERAGE----------\n")
+    test_file.write(average.__str__() + "\n")

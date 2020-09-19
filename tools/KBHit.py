@@ -123,4 +123,3 @@ if __name__ == "__main__":
             print(c)
 
     kb.set_normal_term()
-

@@ -1,7 +1,8 @@
-from tools.FileLoader import *
-import sys
 import copy
+import sys
 import time
+
+from tools.FileLoader import *
 
 
 class GreedySearch:
@@ -20,15 +21,15 @@ class GreedySearch:
             index = temp.index(elem)
             visited = [index]
             while visited.__len__() < self.__loader.get_number_of_cities():
-                temp_index = temp[index].index(min(temp[index][:index] + temp[index][index+1:]))
+                temp_index = temp[index].index(min(temp[index][:index] + temp[index][index + 1:]))
                 if temp_index not in visited:
-                    cost += min(temp[index][:index] + temp[index][index+1:])
+                    cost += min(temp[index][:index] + temp[index][index + 1:])
                     visited.append(temp_index)
                     index = temp_index
                 else:
                     temp[index][temp_index] = sys.maxsize
 
-            cost += self.__data[visited[visited.__len__()-1]][visited[0]]
+            cost += self.__data[visited[visited.__len__() - 1]][visited[0]]
             visited.append(visited[0])
             if cost < self.__best_cost:
                 # print("GREEDY FOUND " + visited.__str__())
